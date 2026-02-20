@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hai Clarissa 🌸</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Quicksand', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Animations */
+        @keyframes gentle-float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        @keyframes cute-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        @keyframes sparkle {
+            0% { opacity: 0; transform: scale(0) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1) rotate(180deg); }
+            100% { opacity: 0; transform: scale(0) rotate(360deg); }
+        }
+        
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+        
+        @keyframes slide-up {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        /* Utility Classes */
+        .animate-float { animation: gentle-float 3s ease-in-out infinite; }
+        .animate-bounce { animation: cute-bounce 2s ease-in-out infinite; }
+        .animate-wiggle { animation: wiggle 0.5s ease-in-out infinite; }
+        .animate-slide-up { animation: slide-up 0.6s ease-out; }
+        
+        .sweet-gradient {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 50%, #fab1a0 100%);
+        }
+        
+        .pastel-gradient {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+        }
+        
+        .cute-button {
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .cute-button:hover {
+            transform: scale(1.05) rotate(-2deg);
+        }
+        
+        .cute-button:active {
+            transform: scale(0.95) rotate(2deg);
+        }
+        
+        /* Floating elements */
+        .floating {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        
+        /* Message bubble */
+        .message-bubble {
+            position: relative;
+            background: white;
+            border-radius: 20px;
+            padding: 15px 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .message-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 30px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 0 0 20px 0;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.05);
+            transform: rotate(45deg);
+        }
+        
+        /* Music button */
+        .music-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .music-toggle:hover {
+            transform: scale(1.1) rotate(10deg);
+        }
+        
+        .music-toggle.playing {
+            animation: cute-bounce 1s ease-in-out infinite;
+        }
+        
+        /* Fun cards */
+        .fun-card {
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        
+        .fun-card-inner {
+            position: relative;
+            width: 100%;
+            height: 180px;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        
+        .fun-card:hover .fun-card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .fun-card-front, .fun-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .fun-card-back {
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        
+        /* Heart rain */
+        .heart-rain {
+            position: fixed;
+            pointer-events: none;
+            animation: heart-fall 3s linear forwards;
+            z-index: 9999;
+        }
+        
+        @keyframes heart-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Poem Card */
+        .poem-card {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        .poem-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="min-h-screen sweet-gradient">
+    
+    <!-- Cute floating elements -->
+    <div class="floating animate-float" style="top: 10%; left: 5%; animation-delay: 0s;">🌸</div>
+    <div class="floating animate-float" style="top: 15%; right: 10%; animation-delay: 1s;">⭐</div>
+    <div class="floating animate-float" style="top: 70%; left: 8%; animation-delay: 0.5s;">🌷</div>
+    <div class="floating animate-float" style="top: 80%; right: 5%; animation-delay: 1.5s;">✨</div>
+    
+    <!-- Music toggle -->
+    <div class="music-toggle" id="musicBtn" onclick="toggleMusic()">
+        <span id="musicIcon">🎵</span>
+    </div>
+    
+    <!-- Main container -->
+    <div class="min-h-screen flex items-center justify-center px-4 py-8">
+        
+        <div class="max-w-3xl w-full">
+            
+            <!-- Header -->
+            <header class="text-center mb-8 animate-slide-up">
+                <div class="inline-block relative">
+                    <h1 class="text-4xl md:text-5xl font-bold text-white mb-2">
+                        Hai <span class="text-pink-600 animate-wiggle inline-block">Clarissa</span>! 🌸
+                    </h1>
+                    <div class="absolute -top-3 -right-8 text-2xl animate-bounce">✨</div>
+                </div>
+                <p class="text-white/80 text-sm mt-2">Ada pesan kecil untuk kamu...</p>
+            </header>
+            
+            <!-- Message card -->
+            <main class="glass-effect rounded-3xl p-8 mb-6 animate-slide-up" style="animation-delay: 0.2s;">
+                
+                <!-- Chat style message -->
+                <div class="space-y-4 mb-8">
+                    <div class="flex justify-start">
+                        <div class="message-bubble max-w-xs">
+                            <p class="text-gray-700">
+                                Hmm... gimana ya ya... 😅
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end">
+                        <div class="message-bubble max-w-xs bg-pink-50">
+                            <p class="text-gray-700">
+                                Aku mau minta maaf nih...
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-start">
+                        <div class="message-bubble max-w-xs">
+                            <p class="text-gray-700">
+                                Kalau ada salah kata atau bikin kamu sebel...
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end">
+                        <div class="message-bubble max-w-xs bg-yellow-50">
+                            <p class="text-gray-700">
+                                Maafin ya, Clarissa Azzahra? 🙏
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Fun facts cards -->
+                <div class="mb-8">
+                    <h3 class="text-center text-gray-700 font-semibold mb-4">
+                        Hal-hal lucu tentang kamu ✨
+                    </h3>
+                    
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div class="fun-card">
+                            <div class="fun-card-inner">
+                                <div class="fun-card-front glass-effect">
+                                    <div class="text-center">
+                                        <span class="text-3xl mb-2 block">😊</span>
+                                        <p class="text-gray-700 font-medium">Senyummu</p>
+                                    </div>
+                                </div>
+                                <div class="fun-card-back">
+                                    <p class="text-white text-sm">Bisa bikin hariku ceria seketika!</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="fun-card">
+                            <div class="fun-card-inner">
+                                <div class="fun-card-front glass-effect">
+                                    <div class="text-center">
+                                        <span class="text-3xl mb-2 block">🎵</span>
+                                        <p class="text-gray-700 font-medium">Lagu Favorit</p>
+                                    </div>
+                                </div>
+                                <div class="fun-card-back">
+                                    <p class="text-white text-sm">Armada - Mau Dibawa Kemana, kan? 😄</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="fun-card">
+                            <div class="fun-card-inner">
+                                <div class="fun-card-front glass-effect">
+                                    <div class="text-center">
+                                        <span class="text-3xl mb-2 block">💭</span>
+                                        <p class="text-gray-700 font-medium">Chat sama kamu</p>
+                                    </div>
+                                </div>
+                                <div class="fun-card-back">
+                                    <p class="text-white text-sm">Selalu bikin aku smile sendiri!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Button to show poems -->
+                <div class="text-center mb-6">
+                    <button id="poemButton" onclick="showPoems()" class="cute-button bg-purple-100 hover:bg-purple-200 px-6 py-3 rounded-full font-medium text-purple-700">
+                        <span class="text-xl">📝</span>
+                        <span class="ml-2">Ada Puisi Juga Nih...</span>
+                    </button>
+                </div>
+
+                <!-- Poem Section (Hidden by default) -->
+                <section id="poemSection" class="hidden space-y-4 mb-8">
+                    <h3 class="text-center text-gray-700 font-semibold mb-4">
+                        Puisi Random Buat Cisa 🌻
+                    </h3>
+
+                    <div class="poem-card glass-effect rounded-2xl p-4">
+                        <p class="text-gray-700 text-center italic">
+                            "Notifikasi berbunyi, 'Ding!'<br>
+                            Ternyata pesan dari Cisa.<br>
+                            Senyumku jadi meleleh,<br>
+                            Hari yang biasa-biasa aja, jadi nggak biasa."
+                        </p>
+                    </div>
+
+                    <div class="poem-card glass-effect rounded-2xl p-4">
+                        <p class="text-gray-700 text-center italic">
+                            "Lagu Armada nyanyiin 'Mau Dibawa Kemana?'.<br>
+                            Aku sih gak tau jawabannya.<br>
+                            Tapi kalau tujuannya bikin Cisa senyum, aku ikut!"
+                        </p>
+                    </div>
+
+                    <div class="poem-card glass-effect rounded-2xl p-4">
+                        <p class="text-gray-700 text-center italic">
+                            "Ada awan mendung di hati,<br>
+                            Senyum-senyum sendiri nggak jelas.<br>
+                            Eh, pesan dari Cisa masuk.<br>
+                            Mendungnya langsung pergi, nggak tau kok bisa."
+                        </p>
+                    </div>
+
+                    <div class="poem-card glass-effect rounded-2xl p-4">
+                        <p class="text-gray-700 text-center italic">
+                            "C I S A...<br>
+                            'Ceritakan Itu Siapa Aja?'<br>
+                            Oh, ternyata itu Cisa,<br>
+                            Orangnya lucu, hehe."
+                        </p>
+                    </div>
+
+                    <div class="poem-card glass-effect rounded-2xl p-4">
+                        <p class="text-gray-700 text-center italic">
+                            "Ini bukan puisi puitis,<br>
+                            Cuma catatan kecil dari aku.<br>
+                            Semoga hari Cisa selalu ceria,<br>
+                            kayak senyummu itu."
+                        </p>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button onclick="hidePoems()" class="cute-button bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full text-gray-600 text-sm">
+                            Sembunyiin lagi
+                        </button>
+                    </div>
+                </section>
+                
+                <!-- Interactive section -->
+                <div class="text-center space-y-4">
+                    <p class="text-gray-600 text-sm">
+                        Klik tombol di bawah ya... 👇
+                    </p>
+                    
+                    <div class="flex justify-center space-x-3">
+                        <button onclick="sendLove()" class="cute-button bg-pink-100 hover:bg-pink-200 px-6 py-3 rounded-full font-medium text-pink-700">
+                            <span class="text-xl">💕</span>
+                            <span class="ml-2">Kirim Kasih</span>
+                        </button>
+                        
+                        <button onclick="showCuteMessage()" class="cute-button bg-yellow-100 hover:bg-yellow-200 px-6 py-3 rounded-full font-medium text-yellow-700">
+                            <span class="text-xl">🌻</span>
+                            <span class="ml-2">Pesan Lucu</span>
+                        </button>
+                    </div>
+                    
+                    <div id="loveCounter" class="text-gray-500 text-xs mt-3">
+                        0 kasih terkirim 💕
+                    </div>
+                </div>
+                
+            </main>
+            
+            <!-- Footer -->
+            <footer class="text-center text-white/70 text-xs">
+                <p>Semoga harimu menyenangkan ya! 🌈</p>
+                <div class="flex items-center justify-center space-x-2 mt-2">
+                    <span class="animate-bounce" style="animation-delay: 0s;">🌸</span>
+                    <span class="animate-bounce" style="animation-delay: 0.2s;">⭐</span>
+                    <span class="animate-bounce" style="animation-delay: 0.4s;">🌸</span>
+                </div>
+            </footer>
+            
+        </div>
+    </div>
+    
+    <!-- Cute message popup -->
+    <div id="cutePopup" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="bg-white rounded-3xl p-8 max-w-sm mx-4 transform scale-0 transition-transform duration-300" id="popupContent">
+            <div class="text-center space-y-4">
+                <div class="text-5xl animate-bounce">🌻</div>
+                <h3 class="text-xl font-semibold text-gray-800">
+                    Kamu itu... 
+                </h3>
+                <p class="text-gray-600">
+                    ...orang yang paling asik diajak ngobrol! 😊
+                    <br class="my-2">
+                    Makanya maafin aku ya hehe~
+                </p>
+                <button onclick="closeCuteMessage()" class="bg-pink-100 hover:bg-pink-200 px-6 py-2 rounded-full text-pink-700 font-medium mt-4">
+                    Oke sih! 😄
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Audio for Armada - Mau Dibawa Kemana -->
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        <!-- Note: Ganti dengan URL lagu Armada yang sebenarnya -->
+    </audio>
+    
+    <script>
+        let loveCount = 0;
+        let isPlaying = false;
+        
+        // Toggle music
+        function toggleMusic() {
+            const audio = document.getElementById('bgMusic');
+            const icon = document.getElementById('musicIcon');
+            const btn = document.getElementById('musicBtn');
+            
+            if (isPlaying) {
+                audio.pause();
+                icon.textContent = '🎵';
+                btn.classList.remove('playing');
+            } else {
+                audio.play().catch(e => {
+                    console.log('Autoplay prevented:', e);
+                });
+                icon.textContent = '🔇';
+                btn.classList.add('playing');
+            }
+            isPlaying = !isPlaying;
+        }
+        
+        // Send love function
+        function sendLove() {
+            loveCount++;
+            document.getElementById('loveCounter').textContent = 
+                `${loveCount} kasih terkirim 💕`;
+            
+            createHeart();
+            const btn = event.currentTarget;
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                btn.style.transform = '';
+            }, 200);
+        }
+        
+        // Create floating heart
+        function createHeart() {
+            const hearts = ['💕', '💖', '💗', '💝'];
+            const heart = document.createElement('div');
+            heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+            heart.className = 'heart-rain';
+            heart.style.left = Math.random() * window.innerWidth + 'px';
+            heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 3000);
+        }
+        
+        // Show cute message
+        function showCuteMessage() {
+            const popup = document.getElementById('cutePopup');
+            const content = document.getElementById('popupContent');
+            
+            popup.classList.remove('hidden');
+            popup.classList.add('flex');
+            
+            setTimeout(() => {
+                content.style.transform = 'scale(1)';
+            }, 10);
+            
+            for(let i = 0; i < 5; i++) {
+                setTimeout(() => createSparkle(), i * 100);
+            }
+        }
+        
+        // Close cute message
+        function closeCuteMessage() {
+            const popup = document.getElementById('cutePopup');
+            const content = document.getElementById('popupContent');
+            
+            content.style.transform = 'scale(0)';
+            
+            setTimeout(() => {
+                popup.classList.add('hidden');
+                popup.classList.remove('flex');
+            }, 300);
+        }
+        
+        // Show poems
+        function showPoems() {
+            const section = document.getElementById('poemSection');
+            const button = document.getElementById('poemButton');
+            
+            section.classList.remove('hidden');
+            button.style.display = 'none'; // Hide the button after clicking
+            
+            const cards = section.querySelectorAll('.poem-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('show');
+                }, index * 150); // Staggered animation
+            });
+        }
+        
+        // Hide poems
+        function hidePoems() {
+            const section = document.getElementById('poemSection');
+            const button = document.getElementById('poemButton');
+            
+            section.classList.add('hidden');
+            button.style.display = 'inline-flex'; // Show the button again
+        }
+        
+        // Create sparkle effect
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.innerHTML = '✨';
+            sparkle.style.cssText = `
+                position: fixed;
+                left: ${Math.random() * window.innerWidth}px;
+                top: ${Math.random() * window.innerHeight}px;
+                font-size: 20px;
+                pointer-events: none;
+                animation: sparkle 1s ease-out forwards;
+                z-index: 9999;
+            `;
+            document.body.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 1000);
+        }
+        
+        // Add random sparkles on hover
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.98) {
+                createSparkle();
+            }
+        });
+    </script>
+</body>
+</html>
